@@ -1,0 +1,20 @@
+{
+  "name": "focusflow-backend",
+  "version": "1.0.0",
+  "description": "FocusFlow REST API (Node.js, Express, PostgreSQL)",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "db:schema": "node database/runSql.js database/schema.sql",
+    "db:seed": "node database/runSql.js database/seed.sql"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
