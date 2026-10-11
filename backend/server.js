@@ -66,16 +66,30 @@ app.use(errorHandler);
 async function start() {
   try {
     await db.checkConnection();
-    console.log('PostgreSQL connection OK');
+    if (db.mode === 'embedded') {
+      console.log('PostgreSQL ready: embedded demo database (no setup needed). Set DATABASE_URL in .env to use your own PostgreSQL server.');
+    } else {
+      console.log('PostgreSQL connection OK');
+    }
   } catch (err) {
     console.error('Could not connect to PostgreSQL:', err.message);
     console.error('Check DATABASE_URL in your .env file and that PostgreSQL is running.');
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`FocusFlow API running at http://localhost:${PORT}`);
   });
+
+  // Ctrl+C: stop accepting requests and close the database cleanly, so no data is lost.
+  const shutdown = () => {
+    server.close(async () => {
+      await db.close();
+      process.exit(0);
+    });
+  };
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 }
 
 start();

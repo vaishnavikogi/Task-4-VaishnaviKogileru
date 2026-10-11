@@ -10,7 +10,7 @@ FocusFlow is a student productivity and study dashboard. This final project conn
 | ---------- | ---------------------------------------------- | ----------- |
 | Frontend   | HTML5, CSS3, Vanilla JavaScript (`fetch`)      | `frontend/` |
 | Backend    | Node.js, Express.js, REST API, CORS            | `backend/`  |
-| Database   | PostgreSQL (`pg`)                              | `backend/`  |
+| Database   | PostgreSQL (`pg`, or embedded PGlite for zero-setup demo mode) | `backend/`  |
 
 No React, Vue, Angular, Axios or jQuery is used. All requests use the native `fetch()` API.
 
@@ -61,7 +61,7 @@ FocusFlow/
 └── backend/
     ├── server.js
     ├── package.json
-    ├── .env.example         copy to .env and fill in
+    ├── .env.example         optional: copy to .env to use your own PostgreSQL
     ├── .gitignore
     ├── config/db.js         PostgreSQL connection pool
     ├── database/
@@ -91,13 +91,24 @@ FocusFlow/
 
 ## 6. How to run
 
-You need **Node.js 18+** and a **PostgreSQL** database (local, or free on Supabase / Neon).
+You only need **Node.js 18+**. **No database has to be installed or configured.**
 
-### Backend (http://localhost:3000)
+### Backend (http://localhost:3000): quick start
 
 ```bash
 cd backend
 npm install
+npm start
+```
+
+With no `DATABASE_URL`, the backend runs in **demo mode** with an **embedded PostgreSQL** ([PGlite](https://pglite.dev), real PostgreSQL running inside Node.js). On the first start it creates the tables (`database/schema.sql`) and loads the sample data (`database/seed.sql`). Everything is stored in `backend/.data/`, so your data **survives a restart**. Delete that folder to start again from the sample data.
+
+### Backend with your own PostgreSQL server (optional)
+
+Use this if you want a normal PostgreSQL server (local, or free on Supabase / Neon):
+
+```bash
+cd backend
 cp .env.example .env          # Windows: copy .env.example .env
 ```
 
@@ -117,6 +128,8 @@ npm run db:schema
 npm run db:seed               # optional sample data (empties the tables first)
 npm start
 ```
+
+The code is the same in both modes: with `DATABASE_URL` set it uses the `pg` (node-postgres) connection pool.
 
 ### Frontend (http://localhost:5500)
 
